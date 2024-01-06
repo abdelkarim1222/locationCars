@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/transmissions">Transmissions</a></li>
+
+                    </ul>
+                </li>
+
+            </ul>
+            <form method="post" th:action="@{/logout}">
+                <button type="submit" class="btn btn-danger">se deconnecter</button>
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="card" style="margin-top: 50px">
+    <div>
+        <form th:action="@{/transmissions}">
+            <div class="mx-2 my-2">
+                <label class="form-label" for="form1">Mot clé:</label>
+                <input type="text" id="form1" name="mc" th:value="${mc}"  />
+                <button type="submit" class="btn btn-primary fa fa-search" />
+            </div>
+        </form >
+        <a href="/formajouTran" class="btn btn-success fa fa-plus">Ajouter  tran</a>
+    </div>
+</div>
+<div class="card-body">
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>tran</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p:${transmissions}">
+            <td th:text="${p.id}"></td>
+            <td th:text="${p.labelle}"></td>
+
+            <td >
+                <a th:href="@{'/deleteTran/'+${p.id}}" class="btn btn-danger fa fa-trash"></a>
+                <a th:href="@{'/updateTran/'+${p.id}}" class="btn btn-warning fa fa-edit"></a>
+            </td>
+
+        </tr>
+        </tbody>
+
+
+    </table>
+    <ul class="nav nav-pills">
+        <li th:each="i,c:${pages}" >
+            <a th:href="@{/transmissions(mc=${mc},page=${c.index})}" th:text="${c.index+1}"
+               th:class="${c.index==currentpage?'btn btn-primary mx-2':'btn btn-outline-primary mx-2'}"></a>
+
+        </li>
+
+    </ul>
+</div>
+</body>
+</html>
