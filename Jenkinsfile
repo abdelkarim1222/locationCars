@@ -1,44 +1,28 @@
 pipeline {
-    agent any
+agent any
+triggers {
+pollSCM('*/5 * * * *') // Vérifier toutes les 5 minutes
+}
+stages {
+stage('Checkout') {
+steps {
+echo "Récupération du code source"
+checkout scm
+}
+}
+stage('Build') {
+steps {
+echo "Build du projet"
 
-    stages {
-        stage('Checkout') {
-            steps {
-                // Checkout code from the Git repository
-                script {
-                    git credentialsId: 'abdelkarim', url: 'https://github.com/abdelkarim1222/locationCars.git'
-                }
-            }
-        }
+// Ajoutez les commandes de build ici
 
-        stage('Build') {
-            steps {
-                // Build your project, replace with actual build commands
-                sh 'mvn clean install'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                // Run tests, replace with actual test commands
-                sh 'mvn test'
-            }
-        }
-
-        // Add more stages as needed for deployment, additional testing, etc.
-    }
-
-    post {
-        success {
-            // Actions to perform if the pipeline is successful
-            echo 'Pipeline succeeded! Deploying...'
-            // Add deployment steps here
-        }
-
-        failure {
-            // Actions to perform if the pipeline fails
-            echo 'Pipeline failed! Not deploying...'
-            // Add rollback or notification steps here
-        }
-    }
+}
+}
+stage('Deploy') {
+steps {
+echo "Déploiement du projet"
+// Ajoutez les commandes de déploiement ici
+}
+}
+}
 }
