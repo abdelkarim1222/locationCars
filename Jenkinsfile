@@ -6,7 +6,10 @@ pollSCM('*/5 * * * *') // Vérifier toutes les 5 minutes
 stages {
 stage('Checkout') {
 steps {
-echo "Récupération du code source"
+ script {
+                    git branch: '*/master', credentialsId: 'abdelkarim', url: 'https://github.com/abdelkarim1222/locationCars.git'
+                }
+        echo "Récupération du code source"
 checkout scm
 }
 }
