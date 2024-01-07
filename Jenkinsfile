@@ -1,31 +1,43 @@
 pipeline {
-agent any
-triggers {
-pollSCM('*/5 * * * *') // Vérifier toutes les 5 minutes
-}
-stages {
-stage('Checkout') {
-steps {
- script {
-                    git branch: '*/master', credentialsId: 'abdelkarim', url: 'https://github.com/abdelkarim1222/locationCars.git'
+    agent none
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('abdelkarim')
+    }
+    stages {
+        stage('Checkout'){
+            agent any
+            steps{
+                checkout scm
+            }
+        }
+
+        stage('Init'){
+            agent any
+            steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+
+        stage('Build locationCars'){
+            agent any
+            when {
+              changeset "*/loactionCars/**/.*"
+                beforeAgent true
+           }
+            steps {
+                dir('locationCars'){
+                    sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/locationCars$BUILD_ID .'
+                    sh 'docker push $DOCKERHUB_CREDENTIALS_USR/locationCars:$BUILD_ID'
+                    sh 'docker rmi $DOCKERHUB_CREDENTIALS_USR/locationCars:$BUILD_ID'
                 }
-        echo "Récupération du code source"
-checkout scm
-}
-}
-stage('Build') {
-steps {
-echo "Build du projet"
+            }
+        }
+        stage('logout'){
+            agent any
+            steps {
+                sh 'docker logout'
+            }
+        }
 
-// Ajoutez les commandes de build ici
-
-}
-}
-stage('Deploy') {
-steps {
-echo "Déploiement du projet"
-// Ajoutez les commandes de déploiement ici
-}
-}
-}
+    }
 }
