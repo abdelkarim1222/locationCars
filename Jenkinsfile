@@ -6,7 +6,7 @@ pipeline {
             steps {
                 // Checkout code from the Git repository
                 script {
-                    git credentialsId: 'your-credentials-id', url: 'https://github.com/abdelkarim1222/locationCars.git'
+                    git credentialsId: 'abdelkarim', url: 'https://github.com/abdelkarim1222/locationCars.git'
                 }
             }
         }
