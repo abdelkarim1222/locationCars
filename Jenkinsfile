@@ -1,43 +1,35 @@
 pipeline {
-    agent none
-    environment {
-        DOCKERHUB_CREDENTIALS = credentials('abdelkarim')
+    agent any
+    triggers {
+    pollSCM('*/5 * * * *') // Vérifier toutes les 5 minutes
     }
     stages {
-        stage('Checkout'){
-            agent any
-            steps{
+        stage('Checkout') {
+            steps {
+                echo 'Récupération du code source'
                 checkout scm
             }
         }
 
-        stage('Init'){
-            agent any
+        stage('Build') {
             steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                echo 'Construction de l\'application'
+                // Ajoutez ici les commandes de construction de votre application
             }
         }
 
-        stage('Build locationCars'){
-            agent any
-            when {
-              changeset "*/loactionCars/**/.*"
-                beforeAgent true
-           }
+        stage('Test') {
             steps {
-                dir('locationCars'){
-                    sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/locationCars$BUILD_ID .'
-                    sh 'docker push $DOCKERHUB_CREDENTIALS_USR/locationCars:$BUILD_ID'
-                    sh 'docker rmi $DOCKERHUB_CREDENTIALS_USR/locationCars:$BUILD_ID'
-                }
-            }
-        }
-        stage('logout'){
-            agent any
-            steps {
-                sh 'docker logout'
+                echo 'Exécution des tests'
+                // Ajoutez ici les commandes pour exécuter vos tests
             }
         }
 
+        stage('Deploy') {
+            steps {
+                echo 'Déploiement de l\'application'
+                // Ajoutez ici les commandes pour déployer votre application
+            }
+        }
     }
 }
