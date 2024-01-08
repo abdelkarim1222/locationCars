@@ -21,4 +21,4 @@ COPY . /app
 EXPOSE 80
 
 # Command to run your application
-CMD ["dotnet", "YourApp.dll"]
+CMD ["dotnet", "LocationCars.dll"]
