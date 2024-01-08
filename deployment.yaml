@@ -17,3 +17,4 @@ spec:
           image: abdelkarim793/car:tag
           ports:
             - containerPort: 1010
+      restartPolicy: Always
